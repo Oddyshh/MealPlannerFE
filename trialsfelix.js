@@ -47,24 +47,84 @@ function gaNaarDetailsMealPlan(mealPlanId) {
     window.location = "./mealplan.html?id=" + mealPlanId
 
 }
-function addRecipe() {
+function editMeal() {
     const urlParams = new URLSearchParams(window.location.search);
     const mealId = urlParams.get("mealid");
     const mealDate = urlParams.get("date");
-    const mealType = urlParams.get("mealtype");
+    const mealType = urlParams.get("mealtype").toLowerCase();
     const mealPlanId = urlParams.get("mealplanid");
-    console.log("mealid: " + mealId);
-    console.log("mealplan id: " + mealPlanId);
-    console.log("meal date: " + mealDate);
-    console.log("mealtype: " + mealType);
-    getAllRecipesForMeal(mealType)
+    getAllRecipesForMeal(mealType);
 
     document.getElementById("meal-date").innerHTML = mealDate;
     document.getElementById("meal-meal-type").innerHTML = mealType;
 
+}
 
+async function saveRecipeToMeal() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const mealId = urlParams.get("mealid");
+    const mealDate = urlParams.get("date");
+    const mealType = urlParams.get("mealtype").toLowerCase();
+    const mealPlanId = urlParams.get("mealplanid");
+
+    const recipes = document.getElementsByClassName('recipe-id');
+    // console.log(recipes);
+
+    var editedMeal = {};
+    editedMeal.date = mealDate;
+    editedMeal.id = parseInt(mealId);
+    editedMeal.mealType = mealType;
+
+    editedMeal.servings = parseInt(gebi("servings-amount").value);
+
+    let nameArray = []
+    for (recipe of recipes) {
+        recipeName = recipe.innerText;
+        console.log(recipeName);
+        nameArray.push(recipeName);
+    }
+
+    editedMeal.recipes = await findRecipesByNameForMeal(nameArray);
+    console.log(editedMeal);
+
+    var editedMealJson = JSON.stringify(editedMeal)
 
 }
+
+function addRecipeToMeal(recipe) {
+
+    gebi("added-recipes").innerHTML += `
+    <tr>
+        <td class="recipe-id">
+           ${recipe}
+        </td>
+        <td>
+           
+        </td>
+    </tr>
+    `;
+}
+
+async function findMealById(mealId) {
+    const response = await fetch(baseUrl + "/findmealbyid/" + mealId);
+    const meal = await response.json();
+
+    return meal;
+}
+
+async function findRecipesByNameForMeal(recipeNames) {
+    // console.log(recipeNames);
+    const response = await fetch(baseUrl + "/findrecipesbynames", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(recipeNames)
+    });
+    return await response.json();
+
+}
+
 
 async function getAllRecipesForMeal(mealType) {
     const response = await fetch(baseUrl + "/findrecipesbymealtype/" + mealType);
@@ -72,23 +132,21 @@ async function getAllRecipesForMeal(mealType) {
 
     document.getElementById("table-add-recipe").innerHTML = `
     <tr>
-        <td>
-            <input class="input-amount" id="servings-amount" type="number" min="0"></input>
-        </td>
-        <td>
-            <input type="text" list="recipelist" name="recipe" id="recipe-list-for-meal"></input>
+        <td id="recipe-list-table-row">
+            <input type="text" class="random-class-name" list="recipelist" name="recipe" id="recipe-list-for-meal"></input>
             <datalist id="recipelist"></datalist>
         </td>
-        <td>
-            <button class="btn btn-info">add recipe</button>
+        <td id="add-recipe-to-meal-btn">
+            <button class="btn btn-info" id="add-recipe-btn">add recipe</button>
         </td>
-        <td>
-            <button class="btn btn-info">save</button>
-        </td>
-        <td>
-            <button class="btn btn-info">cancel</button>
-        </td>
+    </tr>
+       
     `
+    gebi("add-recipe-btn").addEventListener("click", (event) => {
+        var recipe = gebi("recipe-list-for-meal").value;
+        // console.log(recipe);
+        addRecipeToMeal(recipe);
+    })
 
     let optionsString = "";
     recipes.forEach(recipe => {
