@@ -18,7 +18,8 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 </head>
 
-<body onload="addRecipe()">
+<body onload="editMeal()">
+    <br>
     <div class="row" id="menu">
         <div class="col-sm-2"></div>
         <div class="col-sm-10">
@@ -43,23 +44,37 @@
     </div>
     <div class="row">
         <div class="col-sm-2"></div>
-        <div class="col-sm-4">
+        <div class="col-sm-2">
+            <br>
             <div id="meal-date">Date</div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-sm-2"></div>
-        <div class="col-sm-4">
             <div id="meal-meal-type">MealType</div>
         </div>
+        <div class="col-sm-1">
+            <br>
+            <label for="servings-amount"># Servings</label>
+            <input class="input-amount" id="servings-amount" type="number" min="0" value="1"></input>
+        </div>
     </div>
     <div class="row">
         <div class="col-sm-2"></div>
-        <div class="col-sm-4">
+        <div class="col-sm-3">
             <table class="table" id="recipe-table">
                 <tbody id="added-recipes"></tbody>
                 <tbody id="table-add-recipe"></tbody>
             </table>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-2"></div>
+    </div>
+    <div class="row">
+        <div class="col-sm-2"></div>
+    </div>
+    <div class="row">
+        <div class="col-sm-2"></div>
+        <div class="col-sm-3">
+            <button class="btn btn-info" id="save-recipe-to-meal" onclick="saveRecipeToMeal()">save</button>
+            <button class="btn btn-info">cancel</button>
         </div>
     </div>
 

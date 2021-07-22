@@ -24,7 +24,7 @@
             const mealPlanId = urlParams.get('id');
             console.log(mealPlanId);
             getRequest(detailsMealPlan, "findmealplanbyid/" + mealPlanId);
-            //  detailsMealPlan();
+
         }
         function detailsMealPlan(mealPlan) {
             console.log("in detailsMealplan met id " + mealPlan.id + " van " + mealPlan.start + " tot " + mealPlan.end);
@@ -33,18 +33,18 @@
             var breakfast = "breakfast";
             var lunch = "lunch";
             var dinner = "dinner";
-            const diffTime = Math.abs(enddate - startdate);
-            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-            console.log(diffDays);
-            for (var x = 0; x < diffDays + 1; x++) {
-                var date = new Date;
-                date.setDate(startdate.getDate() + x);
-                var dateString = date.toDateString();
-                gebi("lijstMealsOfMealPlan").innerHTML += dateString + "<br>"
-                gebi("lijstMealsOfMealPlan").innerHTML += `<div id="breakfast-meal" onclick="window.location.href='./editmeal?mealid=&date=${dateString}&mealtype=${breakfast}&mealplanid=${mealPlan.id}'">breakfast<br></div>`
-                gebi("lijstMealsOfMealPlan").innerHTML += `<div id="lunch-meal" onclick="window.location.href='./editmeal?mealid=&date=${dateString}&mealtype=${lunch}&mealplanid=${mealPlan.id}'">lunch<br></div>`
-                gebi("lijstMealsOfMealPlan").innerHTML += `<div id="dinner-meal" onclick="window.location.href='./editmeal?mealid=&date=${dateString}&mealtype=${dinner}&mealplanid=${mealPlan.id}'">dinner<br></div>`
-            }
+            var meals = mealPlan.meals;
+            console.log(meals);
+            meals.forEach(meal => {
+                var date = meal.date;
+                var mealId = meal.id;
+                var mealType = meal.mealType;
+                console.log(date);
+
+                gebi("lijstMealsOfMealPlan").innerHTML += date;
+                gebi("lijstMealsOfMealPlan").innerHTML += `<div id="breakfast-meal" onclick="window.location.href='./editmeal?mealid=${meal.id}&date=${meal.date}&mealtype=${meal.mealType}&mealplanid=${mealPlan.id}'">${meal.mealType}<br></div>`
+
+            });
         }
     </script>
 
