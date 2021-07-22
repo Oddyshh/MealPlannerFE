@@ -34,6 +34,8 @@ function postObject(objJSON, url) {
     var xhr = new XMLHttpRequest();
     xhr.onreadystatechange = function () {
         console.log(this.responseText);
+		var responseAsJson = JSON.parse(this.responseText);
+		gaNaarDetailsMealPlan(responseAsJson.id)
     }
     xhr.open("post", baseUrl + "/" + url, true);
     xhr.setRequestHeader("Content-Type", "application/json");
